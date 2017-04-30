@@ -167,6 +167,10 @@ public:
   std::string strAlbumType; // (Musicbrainz) album release type from tag for album processing by CMusicInfoScanner::FileItemsToAlbums
 
   ReplayGain replayGain;
+  std::string strSortTitle;
+  std::string strSortArtist;
+  std::string strSortAlbum;
+  std::string strSortAlbumArtist; 
 private:
   std::vector<std::string> m_albumArtist; // Album artist from tag for album processing, no desc or MBID
   VECMUSICROLES m_musicRoles;

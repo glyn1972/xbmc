@@ -765,6 +765,12 @@ void CMusicInfoScanner::FileItemsToAlbums(CFileItemList& items, VECALBUMS& album
         album.iYear = (*k)->iYear;
         album.strLabel = (*k)->strRecordLabel;
         album.strType = (*k)->strAlbumType;
+        album.strSortAlbum = (*k)->strSortAlbum;
+        if ((*k)->strSortAlbumArtist.empty()) {
+            album.strSortAlbumArtist = (*k)->strSortArtist;
+        } else {
+            album.strSortAlbumArtist = (*k)->strSortAlbumArtist;
+        }
         album.songs.push_back(**k);
       }
       albums.push_back(album);

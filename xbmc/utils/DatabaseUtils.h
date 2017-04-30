@@ -137,6 +137,9 @@ typedef enum {
   FieldStereoMode,
   FieldUserRating,
   FieldRelevance, // Used for actors' appearances
+  FieldSortArtist,
+  FieldSortAlbum,
+  FieldSortAlbumArtist,
   FieldMax
 } Field;
 

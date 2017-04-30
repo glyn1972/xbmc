@@ -436,6 +436,10 @@ bool CTagLoaderTagLib::ParseTag(ID3v2::Tag *id3v2, MUSIC_INFO::EmbeddedArt *art,
           tag.SetUserrating(POPMtoXBMC(popFrame->rating()));
         }
       }
+    else if (it->first == "TSOT")   tag.SetSortTitle(it->second.front()->toString().to8Bit(true));
+    else if (it->first == "TSOP")   tag.SetSortArtist(it->second.front()->toString().to8Bit(true));
+    else if (it->first == "TSOA")   tag.SetSortAlbum(it->second.front()->toString().to8Bit(true));
+    else if (it->first == "TSO2")   tag.SetSortAlbumArtist(it->second.front()->toString().to8Bit(true));
     else if (g_advancedSettings.m_logLevel == LOG_LEVEL_MAX)
       CLog::Log(LOGDEBUG, "unrecognized ID3 frame detected: %c%c%c%c", it->first[0], it->first[1], it->first[2], it->first[3]);
   } // for
@@ -848,6 +852,14 @@ bool CTagLoaderTagLib::ParseTag(MP4::Tag *mp4, EmbeddedArt *art, CMusicInfoTag& 
         break; // one is enough
       }
     }
+	else if (it->first == "sonm")
+		tag.SetSortTitle(it->second.toStringList().front().to8Bit(true));
+	else if (it->first == "soar")
+		tag.SetSortArtist(it->second.toStringList().front().to8Bit(true));
+	else if (it->first == "soal")
+		tag.SetSortAlbum(it->second.toStringList().front().to8Bit(true));
+	else if (it->first == "soaa")
+		tag.SetSortAlbumArtist(it->second.toStringList().front().to8Bit(true));
   }
 
   if (mp4->comment() != String::null)

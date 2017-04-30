@@ -79,6 +79,8 @@ public:
     songs.clear();
     infoSongs.clear();
     releaseType = Album;
+    strSortAlbum.clear();
+    strSortAlbumArtist.clear();
   }
 
   /*! \brief Get album artist names from the vector of artistcredits objects
@@ -153,6 +155,8 @@ public:
   VECSONGS songs;     ///< Local songs
   VECSONGS infoSongs; ///< Scraped songs
   ReleaseType releaseType;
+  std::string strSortAlbum;
+  std::string strSortAlbumArtist; 
 };
 
 typedef std::vector<CAlbum> VECALBUMS;

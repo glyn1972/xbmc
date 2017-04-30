@@ -129,6 +129,8 @@ public:
    \param rating [in] a rating for the song
    \param userrating [in] a userrating (my rating) for the song
    \param votes [in] a vote counter for the song rating
+   \param strSortTitle [in] the sort title tag of the added song
+   \param strSortArtist [in] the sort artist tag of the added song
    \return the id of the song
    */
   int AddSong(const int idAlbum,
@@ -141,7 +143,8 @@ public:
               const std::string &artistString, const std::vector<std::string>& genres,
               int iTrack, int iDuration, int iYear,
               const int iTimesPlayed, int iStartOffset, int iEndOffset,
-              const CDateTime& dtLastPlayed, float rating, int userrating, int votes);
+              const CDateTime& dtLastPlayed, float rating, int userrating, int votes,
+              const std::string& strSortTitle, const std::string& strSortArtist);
   bool GetSong(int idSong, CSong& song);
 
   /*! \brief Update a song in the database.
@@ -177,6 +180,8 @@ public:
    \param rating [in] a rating for the song
    \param userrating [in] a userrating (my rating) for the song
    \param votes [in] a vote counter for the song rating
+   \param strSortTitle [in] the sort title tag of the added song
+   \param strSortArtist [in] the sort artist tag of the added song
    \return the id of the song
    */
   int UpdateSong(int idSong,
@@ -186,7 +191,8 @@ public:
                  const std::string& artistString, const std::vector<std::string>& genres,
                  int iTrack, int iDuration, int iYear,
                  int iTimesPlayed, int iStartOffset, int iEndOffset,
-                 const CDateTime& dtLastPlayed, float rating, int userrating, int votes);
+                 const CDateTime& dtLastPlayed, float rating, int userrating, int votes,
+                 const std::string& strSortTitle, const std::string& strSortArtist);
 
   //// Misc Song
   bool GetSongByFileName(const std::string& strFileName, CSong& song, int startOffset = 0);
@@ -223,12 +229,15 @@ public:
    \param strType album type (Musicbrainz release type e.g. "Broadcast, Soundtrack, live"), 
    \param bCompilation if the album is a compilation
    \param releaseType "album" or "single"
+   \param strSortAlbum the album title for sorting
+   \param strSortAlbumArtist the album artist for sorting
    \return the id of the album
    */
   int  AddAlbum(const std::string& strAlbum, const std::string& strMusicBrainzAlbumID,
                 const std::string& strArtist, const std::string& strGenre, int year, 
                 const std::string& strRecordLabel, const std::string& strType,
-                bool bCompilation, CAlbum::ReleaseType releaseType);
+                bool bCompilation, CAlbum::ReleaseType releaseType,
+                const std::string& strSortAlbum, const std::string& strSortAlbumArtist);
   /*! \brief retrieve an album, optionally with all songs.
    \param idAlbum the database id of the album.
    \param album [out] the album to fill.
@@ -245,7 +254,7 @@ public:
                    const std::string& strImage, const std::string& strLabel,
                    const std::string& strType,
                    float fRating, int iUserrating, int iVotes, int iYear, bool bCompilation,
-                   CAlbum::ReleaseType releaseType);
+                   CAlbum::ReleaseType releaseType, const std::string& strSortAlbum, const std::string& strSortAlbumArtist);
   bool ClearAlbumLastScrapedTime(int idAlbum);
   bool HasAlbumBeenScraped(int idAlbum);
   int  AddAlbumInfoSong(int idAlbum, const CSong& song);
@@ -604,6 +613,10 @@ private:
     song_strAlbumReleaseType,
     song_mood,
     song_dateAdded,
+    song_strSortTitle,
+    song_strSortArtist,
+    song_strSortAlbum,
+    song_strSortAlbumArtist,
     song_enumCount // end of the enum, do not add past here
   } SongFields;
 
@@ -632,6 +645,8 @@ private:
     album_strReleaseType,
     album_dtDateAdded,
     album_dtLastPlayed,
+    album_strSortAlbum,
+    album_strSortAlbumArtist,
     album_enumCount // end of the enum, do not add past here
   } AlbumFields;
 

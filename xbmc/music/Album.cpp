@@ -180,6 +180,8 @@ CAlbum::CAlbum(const CFileItem& item)
   dateAdded.Reset();
   lastPlayed.Reset();
   releaseType = tag.GetAlbumReleaseType();
+  strSortAlbum = tag.GetSortAlbum();
+  strSortAlbumArtist = tag.GetSortAlbumArtist();
 }
 
 void CAlbum::MergeScrapedAlbum(const CAlbum& source, bool override /* = true */)
@@ -235,6 +237,8 @@ void CAlbum::MergeScrapedAlbum(const CAlbum& source, bool override /* = true */)
     }
   }
   infoSongs = source.infoSongs;
+  strSortAlbum = source.strSortAlbum;
+  strSortAlbumArtist = source.strSortAlbumArtist;
 }
 
 std::string CAlbum::GetGenreString() const
@@ -505,6 +509,8 @@ bool CAlbum::Load(const TiXmlElement *album, bool append, bool prioritise)
   else
     releaseType = Album;
 
+  XMLUtils::GetString(album, "sortAlbum", strSortAlbum);
+  XMLUtils::GetString(album, "sortAlbumArtist", strSortAlbumArtist);
   return true;
 }
 
@@ -584,6 +590,8 @@ bool CAlbum::Save(TiXmlNode *node, const std::string &tag, const std::string& st
   }
 
   XMLUtils::SetString(album, "releasetype", GetReleaseType());
+  XMLUtils::SetString(album, "sortAlbum", strSortAlbum);
+  XMLUtils::SetString(album, "sortAlbumArtist", strSortAlbumArtist);
 
   return true;
 }

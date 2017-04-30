@@ -80,6 +80,8 @@ std::string DatabaseUtils::GetField(Field field, const MediaType &mediaType, Dat
     else if (field == FieldDateAdded) return "albumview.dateAdded";
     else if (field == FieldPlaycount) return "albumview.iTimesPlayed";
     else if (field == FieldLastPlayed) return "albumview.lastPlayed";
+    else if (field == FieldSortAlbum) return "albumview.strSortAlbum";
+    else if (field == FieldSortAlbumArtist) return "albumview.strSortAlbumArtist";
   }
   else if (mediaType == MediaTypeSong)
   {
@@ -103,6 +105,10 @@ std::string DatabaseUtils::GetField(Field field, const MediaType &mediaType, Dat
     else if (field == FieldArtist || field == FieldAlbumArtist) return "songview.strArtists";
     else if (field == FieldGenre) return "songview.strGenre";
     else if (field == FieldDateAdded) return "songview.dateAdded";
+    else if (field == FieldSortTitle) return "songview.strSortTitle";
+    else if (field == FieldSortArtist) return "songview.strSortArtist";
+    else if (field == FieldSortAlbum) return "songview.strSortAlbum";
+    else if (field == FieldSortAlbumArtist) return "songview.strSortAlbumArtist";
   }
   else if (mediaType == MediaTypeArtist)
   {
@@ -499,6 +505,8 @@ int DatabaseUtils::GetField(Field field, const MediaType &mediaType, bool asInde
     else if (field == FieldPlaycount) return CMusicDatabase::album_iTimesPlayed;
     else if (field == FieldLastPlayed) return CMusicDatabase::album_dtLastPlayed;
     else if (field == FieldDateAdded) return CMusicDatabase::album_dtDateAdded;
+    else if (field == FieldSortAlbum) return CMusicDatabase::album_strSortAlbum;
+    else if (field == FieldSortAlbumArtist) return CMusicDatabase::album_strSortAlbumArtist;
   }
   else if (mediaType == MediaTypeSong)
   {
@@ -522,6 +530,10 @@ int DatabaseUtils::GetField(Field field, const MediaType &mediaType, bool asInde
     else if (field == FieldGenre) return CMusicDatabase::song_strGenres;
     else if (field == FieldArtist || field == FieldAlbumArtist) return CMusicDatabase::song_strArtists;
     else if (field == FieldDateAdded) return CMusicDatabase::song_dateAdded;
+    else if (field == FieldSortTitle) return CMusicDatabase::song_strSortTitle;
+    else if (field == FieldSortArtist) return CMusicDatabase::song_strSortArtist;
+    else if (field == FieldSortAlbum) return CMusicDatabase::song_strSortAlbum;
+    else if (field == FieldSortAlbumArtist) return CMusicDatabase::song_strSortAlbumArtist;
   }
   else if (mediaType == MediaTypeArtist)
   {

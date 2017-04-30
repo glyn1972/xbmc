@@ -90,6 +90,10 @@ public:
   const EmbeddedArtInfo &GetCoverArtInfo() const;
   const ReplayGain& GetReplayGain() const;
   CAlbum::ReleaseType GetAlbumReleaseType() const;
+  const std::string& GetSortTitle() const;
+  const std::string& GetSortArtist() const;
+  const std::string& GetSortAlbum() const;
+  const std::string& GetSortAlbumArtist() const;
 
   void SetURL(const std::string& strURL);
   void SetTitle(const std::string& strTitle);
@@ -140,6 +144,10 @@ public:
   void SetReplayGain(const ReplayGain& aGain);
   void SetAlbumReleaseType(CAlbum::ReleaseType releaseType);
   void SetType(const MediaType mediaType);
+  void SetSortTitle(const std::string& strSortTitle);
+  void SetSortArtist(const std::string& strSortArtist);
+  void SetSortAlbum(const std::string& strSortAlbum);
+  void SetSortAlbumArtist(const std::string& strSortAlbumArtist);
 
   /*! \brief Append a unique artist to the artist list
    Checks if we have this artist already added, and if not adds it to the songs artist list.
@@ -223,5 +231,9 @@ protected:
   EmbeddedArtInfo m_coverArt; ///< art information
 
   ReplayGain m_replayGain; ///< ReplayGain information
+  std::string m_strSortTitle;
+  std::string m_strSortArtist;
+  std::string m_strSortAlbum;
+  std::string m_strSortAlbumArtist;
 };
 }

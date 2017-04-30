@@ -160,6 +160,10 @@ CSong::CSong(CFileItem& item)
   idSong = -1;
   iTimesPlayed = 0;
   idAlbum = -1;
+  strSortTitle = tag.GetSortTitle();
+  strSortArtist = tag.GetSortArtist();
+  strSortAlbum = tag.GetSortAlbum();
+  strSortAlbumArtist = tag.GetSortAlbumArtist(); 
 }
 
 CSong::CSong()
@@ -201,6 +205,10 @@ void CSong::Serialize(CVariant& value) const
   value["lastplayed"] = lastPlayed.IsValid() ? lastPlayed.GetAsDBDateTime() : "";
   value["dateadded"] = dateAdded.IsValid() ? dateAdded.GetAsDBDateTime() : "";
   value["albumid"] = idAlbum;
+  value["sortTitle"] = strSortTitle;
+  value["sortArtist"] = strSortArtist;
+  value["sortAlbum"] = strSortAlbum;
+  value["sortAlbumArtist"] = strSortAlbumArtist;
 }
 
 void CSong::Clear()
@@ -230,6 +238,10 @@ void CSong::Clear()
   idAlbum = -1;
   bCompilation = false;
   embeddedArt.clear();
+  strSortTitle.clear();
+  strSortArtist.clear();
+  strSortAlbum.clear();
+  strSortAlbumArtist.clear();
 }
 const std::vector<std::string> CSong::GetArtist() const
 {

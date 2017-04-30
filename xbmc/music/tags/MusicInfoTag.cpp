@@ -141,6 +141,10 @@ const CMusicInfoTag& CMusicInfoTag::operator =(const CMusicInfoTag& tag)
 
   memcpy(&m_dwReleaseDate, &tag.m_dwReleaseDate, sizeof(m_dwReleaseDate));
   m_coverArt = tag.m_coverArt;
+  m_strSortTitle = tag.m_strSortTitle;
+  m_strSortArtist = tag.m_strSortArtist;
+  m_strSortAlbum = tag.m_strSortAlbum;
+  m_strSortAlbumArtist = tag.m_strSortAlbumArtist;
   return *this;
 }
 
@@ -156,6 +160,10 @@ bool CMusicInfoTag::operator !=(const CMusicInfoTag& tag) const
   if (m_iDuration != tag.m_iDuration) return true;
   if (m_iTrack != tag.m_iTrack) return true;
   if (m_albumReleaseType != tag.m_albumReleaseType) return true;
+  if (m_strSortTitle != tag.m_strSortTitle) return true;
+  if (m_strSortArtist != tag.m_strSortArtist) return true;
+  if (m_strSortAlbum != tag.m_strSortAlbum) return true;
+  if (m_strSortAlbumArtist != tag.m_strSortAlbumArtist) return true;
   return false;
 }
 
@@ -338,6 +346,26 @@ const ReplayGain& CMusicInfoTag::GetReplayGain() const
 CAlbum::ReleaseType CMusicInfoTag::GetAlbumReleaseType() const
 {
   return m_albumReleaseType;
+}
+
+const std::string &CMusicInfoTag::GetSortTitle() const
+{
+  return m_strSortTitle;
+}
+
+const std::string &CMusicInfoTag::GetSortArtist() const
+{
+  return m_strSortArtist;
+}
+
+const std::string &CMusicInfoTag::GetSortAlbum() const
+{
+  return m_strSortAlbum;
+}
+
+const std::string &CMusicInfoTag::GetSortAlbumArtist() const
+{
+  return m_strSortAlbumArtist;
 }
 
 void CMusicInfoTag::SetURL(const std::string& strURL)
@@ -647,6 +675,26 @@ void CMusicInfoTag::SetType(const MediaType mediaType)
   m_type = mediaType;
 }
 
+void CMusicInfoTag::SetSortTitle(const std::string& strSortTitle)
+{
+  m_strSortTitle = strSortTitle;
+}
+
+void CMusicInfoTag::SetSortArtist(const std::string& strSortArtist)
+{
+  m_strSortArtist = strSortArtist;
+}
+
+void CMusicInfoTag::SetSortAlbum(const std::string& strSortAlbum)
+{
+  m_strSortAlbum = strSortAlbum;
+}
+
+void CMusicInfoTag::SetSortAlbumArtist(const std::string& strSortAlbumArtist)
+{
+  m_strSortAlbumArtist = strSortAlbumArtist;
+}
+
 void CMusicInfoTag::SetArtist(const CArtist& artist)
 {
   SetArtist(artist.strArtist);
@@ -691,6 +739,8 @@ void CMusicInfoTag::SetAlbum(const CAlbum& album)
   SetPlayCount(album.iTimesPlayed);
   SetDatabaseId(album.idAlbum, MediaTypeAlbum);
   SetLastPlayed(album.lastPlayed);
+  SetSortAlbum(album.strSortAlbum);
+  SetSortAlbumArtist(album.strSortAlbumArtist);
 
   SetLoaded();
 }
@@ -735,6 +785,8 @@ void CMusicInfoTag::SetSong(const CSong& song)
   SetCompilation(song.bCompilation);
   SetAlbumId(song.idAlbum);
   SetDatabaseId(song.idSong, MediaTypeSong);
+  SetSortArtist(song.strSortArtist);
+  SetSortTitle(song.strSortTitle);
 
   if (song.replayGain.Get(ReplayGain::TRACK).Valid())
     m_replayGain.Set(ReplayGain::TRACK, song.replayGain.Get(ReplayGain::TRACK));
@@ -807,6 +859,10 @@ void CMusicInfoTag::Serialize(CVariant& value) const
     value["releasetype"] = CAlbum::ReleaseTypeToString(m_albumReleaseType);
   else if (m_type.compare(MediaTypeSong) == 0)
     value["albumreleasetype"] = CAlbum::ReleaseTypeToString(m_albumReleaseType);
+  value["sorttitle"] = m_strSortTitle;
+  value["sortartist"] = m_strSortArtist;
+  value["sortalbum"] = m_strSortAlbum;
+  value["sortalbumartist"] = m_strSortAlbumArtist;
 }
 
 void CMusicInfoTag::ToSortable(SortItem& sortable, Field field) const
@@ -838,6 +894,10 @@ void CMusicInfoTag::ToSortable(SortItem& sortable, Field field) const
   case FieldDateAdded:   sortable[FieldDateAdded] = m_dateAdded.IsValid() ? m_dateAdded.GetAsDBDateTime() : StringUtils::Empty; break;
   case FieldListeners:   sortable[FieldListeners] = m_listeners; break;
   case FieldId:          sortable[FieldId] = (int64_t)m_iDbId; break;
+  case FieldSortTitle:   sortable[FieldSortTitle] = m_strSortTitle; break;
+  case FieldSortArtist:  sortable[FieldSortArtist] = m_strSortArtist; break;
+  case FieldSortAlbum:   sortable[FieldSortAlbum] = m_strSortAlbum; break;
+  case FieldSortAlbumArtist: sortable[FieldSortAlbumArtist] = m_strSortAlbumArtist; break;
   default: break;
   }
 }
@@ -889,6 +949,10 @@ void CMusicInfoTag::Archive(CArchive& ar)
     ar << m_coverArt;
     ar << m_cuesheet;
     ar << static_cast<int>(m_albumReleaseType);
+    ar << m_strSortTitle;
+    ar << m_strSortArtist;
+    ar << m_strSortAlbum;
+    ar << m_strSortAlbumArtist;
   }
   else
   {
@@ -945,6 +1009,10 @@ void CMusicInfoTag::Archive(CArchive& ar)
     int albumReleaseType;
     ar >> albumReleaseType;
     m_albumReleaseType = static_cast<CAlbum::ReleaseType>(albumReleaseType);
+    ar >> m_strSortTitle;
+    ar >> m_strSortArtist;
+    ar >> m_strSortAlbum;
+    ar >> m_strSortAlbumArtist;
   }
 }
 
@@ -984,6 +1052,10 @@ void CMusicInfoTag::Clear()
   m_Rating = 0;
   m_Userrating = 0;
   m_Votes = 0;
+  m_strSortTitle.clear();
+  m_strSortArtist.clear();
+  m_strSortAlbum.clear();
+  m_strSortAlbumArtist.clear();
 }
 
 void CMusicInfoTag::AppendArtist(const std::string &artist)
