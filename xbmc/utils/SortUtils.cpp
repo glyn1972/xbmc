@@ -99,19 +99,34 @@ std::string ByDriveType(SortAttribute attributes, const SortItem &values)
 
 std::string ByTitle(SortAttribute attributes, const SortItem &values)
 {
-  if (attributes & SortAttributeIgnoreArticle)
-    return SortUtils::RemoveArticles(values.at(FieldTitle).asString());
+  std::string label = values.at(FieldSortTitle).asString();
+  if (label.empty())
+  {
+    label = values.at(FieldTitle).asString();
+    if (attributes & SortAttributeIgnoreArticle) label = SortUtils::RemoveArticles(label);
+  }
 
-  return values.at(FieldTitle).asString();
+  return label;
 }
 
 std::string ByAlbum(SortAttribute attributes, const SortItem &values)
 {
-  std::string album = values.at(FieldAlbum).asString();
-  if (attributes & SortAttributeIgnoreArticle)
-    album = SortUtils::RemoveArticles(album);
+  std::string album = values.at(FieldAlbumSort).asString();
+  if (album.empty())
+  {
+    album = values.at(FieldAlbum).asString();
+    if (attributes & SortAttributeIgnoreArticle)
+      album = SortUtils::RemoveArticles(album);
+  }
 
-  std::string label = StringUtils::Format("%s %s", album.c_str(), ArrayToString(attributes, values.at(FieldArtist)).c_str());
+  std::string artist = values.at(FieldAlbumArtistSort).asString();
+  if (artist.empty())
+    artist = values.at(FieldArtistSort).asString();
+
+  if (artist.empty())
+    artist = ArrayToString(attributes, values.at(FieldArtist));
+
+  std::string label = StringUtils::Format("%s %s", album.c_str(), artist.c_str());
 
   const CVariant &track = values.at(FieldTrackNumber);
   if (!track.isNull())
@@ -131,14 +146,20 @@ std::string ByArtist(SortAttribute attributes, const SortItem &values)
   if (attributes & SortAttributeUseArtistSortName)
   {
     const CVariant &artistsort = values.at(FieldArtistSort);
-    if (!artistsort.isNull())
+    const CVariant &artistalbumsort = values.at(FieldAlbumArtistSort);
+    if (!artistalbumsort.isNull())
+      label = artistalbumsort.asString();
+    else if (!artistsort.isNull())
       label = artistsort.asString();
   }
   if (label.empty())
     label = ArrayToString(attributes, values.at(FieldArtist));
 
   const CVariant &album = values.at(FieldAlbum);
-  if (!album.isNull())
+  const CVariant &albumsort = values.at(FieldAlbumSort);
+  if (!albumsort.isNull())
+    label += " " + albumsort.asString();
+  else if (!album.isNull())
     label += " " + SortUtils::RemoveArticles(album.asString());
 
   const CVariant &track = values.at(FieldTrackNumber);
@@ -153,8 +174,11 @@ std::string ByArtistThenYear(SortAttribute attributes, const SortItem &values)
   std::string label;
   if (attributes & SortAttributeUseArtistSortName)
   {
-    const CVariant &artistsort = values.at(FieldArtistSort);
-    if (!artistsort.isNull())
+    const CVariant& artistsort = values.at(FieldArtistSort);
+    const CVariant& artistalbumsort = values.at(FieldAlbumArtistSort);
+    if (!artistalbumsort.isNull())
+      label = artistalbumsort.asString();
+    else if (!artistsort.isNull())
       label = artistsort.asString();
   }
   if (label.empty())
@@ -164,8 +188,11 @@ std::string ByArtistThenYear(SortAttribute attributes, const SortItem &values)
   if (!year.isNull())
     label += StringUtils::Format(" %i", static_cast<int>(year.asInteger()));
 
-  const CVariant &album = values.at(FieldAlbum);
-  if (!album.isNull())
+  const CVariant& album = values.at(FieldAlbum);
+  const CVariant& albumsort = values.at(FieldAlbumSort);
+  if (!albumsort.isNull())
+    label += " " + albumsort.asString();
+  else if (!album.isNull())
     label += " " + SortUtils::RemoveArticles(album.asString());
 
   const CVariant &track = values.at(FieldTrackNumber);
@@ -240,11 +267,11 @@ std::string ByYear(SortAttribute attributes, const SortItem &values)
 }
 
 std::string ByOrigDate(SortAttribute attributes, const SortItem& values)
-{  
+{
   std::string label;
   label = values.at(FieldOrigDate).asString();
 
-  const CVariant &album = values.at(FieldAlbum); 
+  const CVariant &album = values.at(FieldAlbum);
   if (!album.isNull())
     label += " " + SortUtils::RemoveArticles(album.asString());
 
@@ -666,6 +693,7 @@ std::map<SortBy, Fields> fillSortingFields()
   sortingFields[SortByPath].insert(FieldStartOffset);
   sortingFields[SortByDriveType].insert(FieldDriveType);
   sortingFields[SortByTitle].insert(FieldTitle);
+  sortingFields[SortByTitle].insert(FieldSortTitle);
   sortingFields[SortByTrackNumber].insert(FieldTrackNumber);
   sortingFields[SortByTime].insert(FieldTime);
   sortingFields[SortByArtist].insert(FieldArtist);
@@ -673,16 +701,25 @@ std::map<SortBy, Fields> fillSortingFields()
   sortingFields[SortByArtist].insert(FieldYear);
   sortingFields[SortByArtist].insert(FieldAlbum);
   sortingFields[SortByArtist].insert(FieldTrackNumber);
+  sortingFields[SortByArtist].insert(FieldArtistSort);
+  sortingFields[SortByArtist].insert(FieldAlbumSort);
+  sortingFields[SortByArtist].insert(FieldAlbumArtistSort);
   sortingFields[SortByArtistThenYear].insert(FieldArtist);
   sortingFields[SortByArtistThenYear].insert(FieldArtistSort);
   sortingFields[SortByArtistThenYear].insert(FieldYear);
   sortingFields[SortByArtistThenYear].insert(FieldOrigDate);
   sortingFields[SortByArtistThenYear].insert(FieldAlbum);
   sortingFields[SortByArtistThenYear].insert(FieldTrackNumber);
+  sortingFields[SortByArtistThenYear].insert(FieldArtistSort);
+  sortingFields[SortByArtistThenYear].insert(FieldAlbumSort);
+  sortingFields[SortByArtistThenYear].insert(FieldAlbumArtistSort);
   sortingFields[SortByAlbum].insert(FieldAlbum);
   sortingFields[SortByAlbum].insert(FieldArtist);
   sortingFields[SortByAlbum].insert(FieldArtistSort);
   sortingFields[SortByAlbum].insert(FieldTrackNumber);
+  sortingFields[SortByAlbum].insert(FieldArtistSort);
+  sortingFields[SortByAlbum].insert(FieldAlbumSort);
+  sortingFields[SortByAlbum].insert(FieldAlbumArtistSort);
   sortingFields[SortByAlbumType].insert(FieldAlbumType);
   sortingFields[SortByGenre].insert(FieldGenre);
   sortingFields[SortByCountry].insert(FieldCountry);
