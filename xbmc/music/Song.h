@@ -126,6 +126,8 @@ public:
   */
   void SetAlbumArtist(const std::vector<std::string>& albumartists) { m_albumArtist = albumartists; }
 
+  void SetAlbumArtistSort(const std::string& strAlbumArtistSort) { m_strAlbumArtistSort = strAlbumArtistSort; }
+
   /*! \brief Whether this song has any artists in artist credits vector
     Tests if artist credits has been populated yet, during processing there can be
     artists in the artist description but not yet in the credits
@@ -161,10 +163,12 @@ public:
   int idAlbum;
   std::string strFileName;
   std::string strTitle;
+  std::string strTitleSort;
   std::string strArtistSort;
   std::string strArtistDesc;
   VECARTISTCREDITS artistCredits;
   std::string strAlbum;
+  std::string strAlbumSort;
   std::vector<std::string> genre;
   std::string strThumb;
   EmbeddedArtInfo embeddedArt;

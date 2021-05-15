@@ -23,6 +23,7 @@ CSong::CSong(CFileItem& item)
 {
   CMusicInfoTag& tag = *item.GetMusicInfoTag();
   strTitle = tag.GetTitle();
+  strTitleSort = tag.GetTitleSort();
   genre = tag.GetGenre();
   strArtistDesc = tag.GetArtistString();
   //Set sort string before processing artist credits
@@ -33,6 +34,7 @@ CSong::CSong(CFileItem& item)
   SetArtistCredits(tag.GetArtist(), tag.GetMusicBrainzArtistHints(), tag.GetMusicBrainzArtistID());
 
   strAlbum = tag.GetAlbum();
+  strAlbumSort = tag.GetAlbumSort();
   m_albumArtist = tag.GetAlbumArtist();
   // Separate album artist names further, if possible, and trim blank space.
   if (tag.GetMusicBrainzAlbumArtistHints().size() > m_albumArtist.size())
@@ -218,10 +220,13 @@ void CSong::Serialize(CVariant& value) const
 {
   value["filename"] = strFileName;
   value["title"] = strTitle;
+  value["titlesort"] = strTitleSort;
   value["artist"] = GetArtist();
   value["artistsort"] = GetArtistSort();  // a string for the song not vector of values for each artist
   value["album"] = strAlbum;
+  value["albumsort"] = strAlbumSort;
   value["albumartist"] = GetAlbumArtist();
+  value["albumartistsort"] = GetAlbumArtistSort();
   value["genre"] = genre;
   value["duration"] = iDuration;
   value["track"] = iTrack;
@@ -248,7 +253,9 @@ void CSong::Clear()
 {
   strFileName.clear();
   strTitle.clear();
+  strTitleSort.clear();
   strAlbum.clear();
+  strAlbumSort.clear();
   strArtistSort.clear();
   strArtistDesc.clear();
   m_albumArtist.clear();
