@@ -74,6 +74,8 @@ std::string DatabaseUtils::GetField(Field field, const MediaType &mediaType, Dat
     else if (field == FieldDateModified) return "albumview.dateModified";
     else if (field == FieldPlaycount) return "albumview.iTimesPlayed";
     else if (field == FieldLastPlayed) return "albumview.lastPlayed";
+    else if (field == FieldAlbumSort) return "albumview.strAlbumSort";
+    else if (field == FieldArtistSort || field == FieldAlbumArtistSort) return "albumview.strArtistSort";
     else if (field == FieldTotalDiscs)
       return "albumview.iDiscTotal";
     else if (field == FieldAlbumStatus)
@@ -109,6 +111,10 @@ std::string DatabaseUtils::GetField(Field field, const MediaType &mediaType, Dat
     else if (field == FieldDateAdded) return "songview.dateAdded";
     else if (field == FieldDateNew) return "songview.dateNew";
     else if (field == FieldDateModified) return "songview.dateModified";
+    else if (field == FieldSortTitle) return "songview.strTitleSort";
+    else if (field == FieldArtistSort) return "songview.strArtistSort";
+    else if (field == FieldAlbumSort) return "songview.strAlbumSort";
+    else if (field == FieldAlbumArtistSort) return "songview.strAlbumArtistSort";
 
     else if (field == FieldDiscTitle)
       return "songview.strDiscSubtitle";
@@ -588,6 +594,8 @@ int DatabaseUtils::GetField(Field field, const MediaType &mediaType, bool asInde
     else if (field == FieldUserRating) return CMusicDatabase::album_iUserrating;
     else if (field == FieldPlaycount) return CMusicDatabase::album_iTimesPlayed;
     else if (field == FieldLastPlayed) return CMusicDatabase::album_dtLastPlayed;
+    else if (field == FieldAlbumSort) return CMusicDatabase::album_strAlbumSort;
+    else if (field == FieldArtistSort || field == FieldAlbumArtistSort) return CMusicDatabase::album_strArtistSort;
     else if (field == FieldDateAdded) return CMusicDatabase::album_dateAdded;
     else if (field == FieldDateNew) return CMusicDatabase::album_dateNew;
     else if (field == FieldDateModified) return CMusicDatabase::album_dateModified;
@@ -624,6 +632,11 @@ int DatabaseUtils::GetField(Field field, const MediaType &mediaType, bool asInde
     else if (field == FieldDateAdded) return CMusicDatabase::song_dateAdded;
     else if (field == FieldDateNew) return CMusicDatabase::song_dateNew;
     else if (field == FieldDateModified) return CMusicDatabase::song_dateModified;
+    else if (field == FieldSortTitle) return CMusicDatabase::song_strTitleSort;
+    else if (field == FieldArtistSort) return CMusicDatabase::song_strArtistSort;
+    else if (field == FieldAlbumSort) return CMusicDatabase::song_strAlbumSort;
+    else if (field == FieldAlbumArtistSort) return CMusicDatabase::song_strAlbumArtistSort;
+
     else if (field == FieldBPM)
       return CMusicDatabase::song_iBPM;
     else if (field == FieldMusicBitRate)
