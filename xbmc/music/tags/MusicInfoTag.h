@@ -31,12 +31,14 @@ public:
   bool operator !=(const CMusicInfoTag& tag) const;
   bool Loaded() const;
   const std::string& GetTitle() const;
+  const std::string& GetTitleSort() const;
   const std::string& GetURL() const;
   const std::vector<std::string>& GetArtist() const;
   const std::string& GetArtistSort() const;
   const std::string GetArtistString() const;
   const std::string& GetComposerSort() const;
   const std::string& GetAlbum() const;
+  const std::string& GetAlbumSort() const;
   int GetAlbumId() const;
   const std::vector<std::string>& GetAlbumArtist() const;
   const std::string GetAlbumArtistString() const;
@@ -91,12 +93,14 @@ public:
 
   void SetURL(const std::string& strURL);
   void SetTitle(const std::string& strTitle);
+  void SetTitleSort(const std::string& strTitleSort);
   void SetArtist(const std::string& strArtist);
   void SetArtist(const std::vector<std::string>& artists, bool FillDesc = false);
   void SetArtistDesc(const std::string& strArtistDesc);
   void SetArtistSort(const std::string& strArtistsort);
   void SetComposerSort(const std::string& strComposerSort);
   void SetAlbum(const std::string& strAlbum);
+  void SetAlbumSort(const std::string& strAlbumSort);
   void SetAlbumId(const int iAlbumId);
   void SetAlbumArtist(const std::string& strAlbumArtist);
   void SetAlbumArtist(const std::vector<std::string>& albumArtists, bool FillDesc = false);
@@ -203,11 +207,13 @@ protected:
 
   std::string m_strURL;
   std::string m_strTitle;
+  std::string m_strTitleSort;
   std::vector<std::string> m_artist;
   std::string m_strArtistSort;
   std::string m_strArtistDesc;
   std::string m_strComposerSort;
   std::string m_strAlbum;
+  std::string m_strAlbumSort;
   std::vector<std::string> m_albumArtist;
   std::string m_strAlbumArtistDesc;
   std::string m_strAlbumArtistSort;
