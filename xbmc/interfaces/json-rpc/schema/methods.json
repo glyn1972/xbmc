@@ -1112,6 +1112,7 @@
     "params": [
       { "name": "albumid", "$ref": "Library.Id", "required": true },
       { "name": "title", "$ref": "Optional.String" },
+      { "name": "sorttitle", "$ref": "Optional.String" },
       { "name": "artist", "type": [ "null", { "$ref": "Array.String", "required": true } ], "default": null },
       { "name": "description", "$ref": "Optional.String" },
       { "name": "genre", "type": [ "null", { "$ref": "Array.String", "required": true } ], "default": null },
@@ -1144,6 +1145,7 @@
     "params": [
       { "name": "songid", "$ref": "Library.Id", "required": true },
       { "name": "title", "$ref": "Optional.String" },
+      { "name": "sorttitle", "$ref": "Optional.String" },
       { "name": "artist", "type": [ "null", { "$ref": "Array.String", "required": true } ], "default": null },
       { "name": "genre", "type": [ "null", { "$ref": "Array.String", "required": true } ], "default": null },
       { "name": "year", "$ref": "Optional.Integer" },
@@ -1160,6 +1162,7 @@
       { "name": "votes", "$ref": "Optional.Integer" },
       { "name": "displayartist", "$ref": "Optional.String" },
       { "name": "sortartist", "$ref": "Optional.String" },
+      { "name": "sortalbumartist", "$ref": "Optional.String" },
       { "name": "mood", "$ref": "Optional.String" },
       { "name": "art", "type": [ "null", { "$ref": "Media.Artwork.Set", "required": true } ], "default": null },
       { "name": "disctitle", "$ref": "Optional.String" },

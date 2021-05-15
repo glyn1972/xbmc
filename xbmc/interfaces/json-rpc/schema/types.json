@@ -518,7 +518,7 @@
     "extends": "Item.Fields.Base",
     "items": { "type": "string",
       "description": "Requesting the songgenres, artistid and/or sourceid fields will result in increased response times",
-      "enum": [ "title", "description", "artist", "genre",
+      "enum": [ "title", "sorttitle", "description", "artist", "genre",
                 "theme", "mood", "style", "type", "albumlabel",
                 "rating", "votes", "userrating","year", "musicbrainzalbumid",
                 "musicbrainzalbumartistid", "fanart", "thumbnail",
@@ -534,7 +534,7 @@
     "extends": "Item.Fields.Base",
     "items": { "type": "string",
       "description": "Requesting the genreid, artistid, albumartistid and/or sourceid fields will result in increased response times",
-      "enum": [ "title", "artist", "albumartist", "genre", "year",
+      "enum": [ "title", "sorttitle", "artist", "albumartist", "genre", "year",
                 "rating", "album", "track", "duration", "comment",
                 "lyrics", "musicbrainztrackid", "musicbrainzartistid",
                 "musicbrainzalbumid", "musicbrainzalbumartistid",
@@ -543,7 +543,7 @@
                 "albumartistid", "albumreleasetype", "dateadded",
                 "votes", "userrating", "mood", "contributors",
                 "displaycomposer", "displayconductor", "displayorchestra", "displaylyricist",
-                "sortartist", "art", "sourceid", "disctitle", "releasedate", "originaldate",
+                "sortartist", "sortalbumartist", "art", "sourceid", "disctitle", "releasedate", "originaldate",
                 "bpm", "samplerate", "bitrate", "channels", "datemodified", "datenew" ]
     }
   },
@@ -641,6 +641,7 @@
     "properties": {
       "albumid": { "$ref": "Library.Id", "required": true },
       "description": { "type": "string" },
+      "sorttitle": { "type": "string" },
       "theme": { "$ref": "Array.String" },
       "mood": { "$ref": "Array.String" },
       "style": { "$ref": "Array.String" },
@@ -664,6 +665,8 @@
     "extends": "Audio.Details.Media",
     "properties": {
       "songid": { "$ref": "Library.Id", "required": true },
+      "sorttitle": { "type": "string" },
+      "sortalbumartist": { "type": "string" },
       "file": { "type": "string" },
       "albumartist": { "$ref": "Array.String" },
       "album": { "type": "string" },
@@ -1592,7 +1595,7 @@
                 "musicbrainzreleasegroupid", "mediapath", "dynpath", "isboxset", "totaldiscs",
                 "disctitle", "releasedate", "originaldate", "bpm", "bitrate", "samplerate",
                 "channels", "albumstatus", "datemodified", "datenew", "customproperties",
-                "albumduration"]
+                "albumduration", "sorttitle", "sortalbumartist"]
     }
   },
   "List.Item.All": {
@@ -1626,7 +1629,7 @@
                 "specialsortseason", "specialsortepisode", "sortartist", "musicbrainzreleasegroupid",
                 "isboxset", "totaldiscs", "disctitle", "releasedate", "originaldate", "bpm",
                 "bitrate", "samplerate", "channels", "datemodified", "datenew", "customproperties",
-                "albumduration"]
+                "albumduration", "sorttitle", "sortalbumartist"]
     }
   },
   "List.Item.File": {
