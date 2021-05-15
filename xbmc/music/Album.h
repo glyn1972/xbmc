@@ -35,6 +35,7 @@ public:
   {
     idAlbum = -1;
     strAlbum.clear();
+    strAlbumSort.clear();
     strMusicBrainzAlbumID.clear();
     strReleaseGroupMBID.clear();
     artistCredits.clear();
@@ -143,6 +144,7 @@ public:
 
   int idAlbum = -1;
   std::string strAlbum;
+  std::string strAlbumSort;
   std::string strMusicBrainzAlbumID;
   std::string strReleaseGroupMBID;
   std::string strArtistDesc;
