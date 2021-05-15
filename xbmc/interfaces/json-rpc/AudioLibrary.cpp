@@ -832,6 +832,8 @@ JSONRPC_STATUS CAudioLibrary::SetAlbumDetails(const std::string &method, ITransp
 
   if (ParameterNotNull(parameterObject, "title"))
     album.strAlbum = parameterObject["title"].asString();
+  if (ParameterNotNull(parameterObject, "sorttitle"))
+    album.strAlbumSort = parameterObject["sorttitle"].asString();
   if (ParameterNotNull(parameterObject, "displayartist"))
     album.strArtistDesc = parameterObject["displayartist"].asString();
   // Set album sort string before processing artist credits
@@ -937,12 +939,18 @@ JSONRPC_STATUS CAudioLibrary::SetSongDetails(const std::string &method, ITranspo
 
   if (ParameterNotNull(parameterObject, "title"))
     song.strTitle = parameterObject["title"].asString();
+  if (ParameterNotNull(parameterObject, "sorttitle"))
+    song.strTitleSort = parameterObject["sorttitle"].asString();
 
   if (ParameterNotNull(parameterObject, "displayartist"))
     song.strArtistDesc = parameterObject["displayartist"].asString();
   // Set album sort string before processing artist credits
   if (ParameterNotNull(parameterObject, "sortartist"))
     song.strArtistSort = parameterObject["sortartist"].asString();
+  if (ParameterNotNull(parameterObject, "sortalbumartist"))
+    song.SetAlbumArtistSort(parameterObject["sortalbumartist"].asString());
+  if (ParameterNotNull(parameterObject, "sortalbum"))
+    song.strAlbumSort = parameterObject["sortalbum"].asString();
 
   // Match up artist names and mbids to make new artist credits
   // Mbid values only apply if there are names

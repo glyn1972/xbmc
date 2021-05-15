@@ -2796,6 +2796,10 @@
         "name": "title",
         "$ref": "Optional.String"
       },
+      { 
+        "name": "sorttitle",
+        "$ref": "Optional.String"
+      },
       {
         "name": "artist",
         "type": [
@@ -2947,6 +2951,10 @@
         "name": "title",
         "$ref": "Optional.String"
       },
+      { 
+        "name": "sorttitle",
+        "$ref": "Optional.String"
+      },
       {
         "name": "artist",
         "type": [
@@ -3023,6 +3031,10 @@
       },
       {
         "name": "sortartist",
+        "$ref": "Optional.String"
+      },
+      { 
+        "name": "sortalbumartist",
         "$ref": "Optional.String"
       },
       {

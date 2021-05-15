@@ -1346,6 +1346,7 @@
           "Requesting the songgenres, artistid and/or sourceid fields will result in increased response times",
       "enum": [
         "title",
+        "sorttitle",
         "description",
         "artist",
         "genre",
@@ -1393,6 +1394,7 @@
           "Requesting the genreid, artistid, albumartistid and/or sourceid fields will result in increased response times",
       "enum": [
         "title",
+        "sorttitle",
         "artist",
         "albumartist",
         "genre",
@@ -1429,6 +1431,7 @@
         "displayorchestra",
         "displaylyricist",
         "sortartist",
+        "sortalbumartist",
         "art",
         "sourceid",
         "disctitle",
@@ -1646,6 +1649,9 @@
       "description": {
         "type": "string"
       },
+      "sorttitle": {
+        "type": "string"
+      },
       "theme": {
         "$ref": "Array.String"
       },
@@ -1705,6 +1711,12 @@
       "songid": {
         "$ref": "Library.Id",
         "required": true
+      },
+      "sorttitle": {
+        "type": "string"
+      },
+      "sortalbumartist": {
+        "type": "string"
       },
       "file": {
         "type": "string"
@@ -3943,6 +3955,8 @@
         "datenew",
         "customproperties",
         "albumduration",
+        "sorttitle",
+        "sortalbumartist",
         "songvideourl"
       ]
     }
@@ -4067,6 +4081,8 @@
         "customproperties",
         "albumduration",
         "userrating",
+        "sorttitle",
+        "sortalbumartist",
         "songvideourl"
       ]
     }
