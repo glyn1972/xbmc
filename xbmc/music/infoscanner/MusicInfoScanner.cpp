@@ -865,10 +865,15 @@ void CMusicInfoScanner::FileItemsToAlbums(CFileItemList& items, VECALBUMS& album
         //! @todo in future we may wish to union up the genres, for now we assume they're the same
         album.genre = k->genre;
         album.strArtistSort = k->GetAlbumArtistSort();
+        if(album.strArtistSort.empty())
+        {
+            album.strArtistSort = k->GetArtistSort();
+        }
         // in addition, we may want to use release date as discriminating between albums
         album.strReleaseDate = k->strReleaseDate,
         album.strLabel = k->strRecordLabel;
         album.strType = k->strAlbumType;
+        album.strAlbumSort = k->strAlbumSort;
         album.songs.push_back(*k);
       }
       albums.push_back(album);
@@ -1088,7 +1093,7 @@ void CMusicInfoScanner::FindArtForAlbums(VECALBUMS &albums, const std::string &p
   if (albums.size() == 1)
   {
     CFileItem album(path, true);
-    /* 
+    /*
      If we are scanning a directory served over http(s) the root directory for an album will set
      IsInternetStream to true which prevents scanning it for art.  As we can't reach this point
      without having read some tags (and tags are not read from streams) we can safely check for
@@ -1334,7 +1339,7 @@ CMusicInfoScanner::UpdateDatabaseAlbumInfo(CAlbum& album,
     bool overridetags = CServiceBroker::GetSettingsComponent()->GetSettings()->GetBool(CSettings::SETTING_MUSICLIBRARY_OVERRIDETAGS);
     // Remove art accidentally set by the Python scraper, it only provides URLs of possible artwork
     // Art is selected later applying whitelist and other art preferences
-    albumInfo.GetAlbum().art.clear(); 
+    albumInfo.GetAlbum().art.clear();
     album.MergeScrapedAlbum(albumInfo.GetAlbum(), overridetags);
     m_musicDatabase.UpdateAlbum(album);
     albumInfo.SetLoaded(true);
