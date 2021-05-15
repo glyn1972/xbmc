@@ -148,6 +148,7 @@ public:
               const CDateTime& dtDateNew,
               const int idAlbum,
               const std::string& strTitle,
+              const std::string& strTitleSort,
               const std::string& strMusicBrainzTrackID,
               const std::string& strPathAndFileName,
               const std::string& strComment,
@@ -217,6 +218,7 @@ public:
    */
   int UpdateSong(int idSong,
                  const std::string& strTitle,
+                 const std::string& strTitleSort,
                  const std::string& strMusicBrainzTrackID,
                  const std::string& strPathAndFileName,
                  const std::string& strComment,
@@ -290,6 +292,7 @@ public:
    \return the id of the album
    */
   int AddAlbum(const std::string& strAlbum,
+               const std::string& strAlbumSort,
                const std::string& strMusicBrainzAlbumID,
                const std::string& strReleaseGroupMBID,
                const std::string& strArtist,
@@ -313,6 +316,7 @@ public:
   bool GetAlbum(int idAlbum, CAlbum& album, bool getSongs = true);
   int UpdateAlbum(int idAlbum,
                   const std::string& strAlbum,
+                  const std::string& strAlbumSort,
                   const std::string& strMusicBrainzAlbumID,
                   const std::string& strReleaseGroupMBID,
                   const std::string& strArtist,
@@ -993,6 +997,7 @@ private:
     song_strArtistSort,
     song_strGenres,
     song_strTitle,
+    song_strTitleSort,
     song_iTrack,
     song_iDuration,
     song_strReleaseDate,
@@ -1010,6 +1015,7 @@ private:
     song_comment,
     song_idAlbum,
     song_strAlbum,
+    song_strAlbumSort,
     song_strPath,
     song_strReleaseStatus,
     song_bCompilation,
@@ -1037,6 +1043,7 @@ private:
   static enum _AlbumFields {
     album_idAlbum = 0,
     album_strAlbum,
+    album_strAlbumSort,
     album_strMusicBrainzAlbumID,
     album_strReleaseGroupMBID,
     album_strArtists,
