@@ -42,6 +42,10 @@ bool CMusicInfoTag::operator !=(const CMusicInfoTag& tag) const
   if (m_iTrack != tag.m_iTrack)
     return true;
   if (m_albumReleaseType != tag.m_albumReleaseType) return true;
+  if (m_strTitleSort != tag.m_strTitleSort) return true;
+  if (m_strArtistSort != tag.m_strArtistSort) return true;
+  if (m_strAlbumSort != tag.m_strAlbumSort) return true;
+  if (m_strAlbumArtistSort != tag.m_strAlbumArtistSort) return true;
   return false;
 }
 
@@ -68,6 +72,11 @@ int CMusicInfoTag::GetDuration() const
 const std::string& CMusicInfoTag::GetTitle() const
 {
   return m_strTitle;
+}
+
+const std::string& CMusicInfoTag::GetTitleSort() const
+{
+  return m_strTitleSort;
 }
 
 const std::string& CMusicInfoTag::GetURL() const
@@ -103,6 +112,11 @@ const std::string& CMusicInfoTag::GetComposerSort() const
 const std::string& CMusicInfoTag::GetAlbum() const
 {
   return m_strAlbum;
+}
+
+const std::string& CMusicInfoTag::GetAlbumSort() const
+{
+  return m_strAlbumSort;
 }
 
 const std::string& CMusicInfoTag::GetDiscSubtitle() const
@@ -338,6 +352,11 @@ void CMusicInfoTag::SetTitle(const std::string& strTitle)
   m_strTitle = Trim(strTitle);
 }
 
+void CMusicInfoTag::SetTitleSort(const std::string& strTitleSort)
+{
+  m_strTitleSort = strTitleSort;
+}
+
 void CMusicInfoTag::SetArtist(const std::string& strArtist)
 {
   if (!strArtist.empty())
@@ -378,7 +397,12 @@ void CMusicInfoTag::SetComposerSort(const std::string& strComposerSort)
 
 void CMusicInfoTag::SetAlbum(const std::string& strAlbum)
 {
-  m_strAlbum = Trim(strAlbum);
+  m_strAlbum = strAlbum;
+}
+
+void CMusicInfoTag::SetAlbumSort(const std::string& strAlbumSort)
+{
+  m_strAlbumSort = Trim(strAlbumSort);
 }
 
 void CMusicInfoTag::SetAlbumId(const int iAlbumId)
@@ -816,6 +840,7 @@ void CMusicInfoTag::SetAlbum(const CAlbum& album)
   SetMusicBrainzAlbumArtistID(album.GetMusicBrainzAlbumArtistID());
   SetAlbumId(album.idAlbum);
   SetAlbum(album.strAlbum);
+  SetAlbumSort(album.strAlbumSort);
   SetTitle(album.strAlbum);
   SetMusicBrainzAlbumID(album.strMusicBrainzAlbumID);
   SetMusicBrainzReleaseGroupID(album.strReleaseGroupMBID);
@@ -848,6 +873,7 @@ void CMusicInfoTag::SetSong(const CSong& song)
 {
   Clear();
   SetTitle(song.strTitle);
+  SetTitleSort(song.strTitleSort);
   SetGenre(song.genre);
   /* Set all artist information from song artist credits and artist description.
      During processing e.g. Cue Sheets, song may only have artist description string
@@ -863,6 +889,7 @@ void CMusicInfoTag::SetSong(const CSong& song)
   }
   SetArtistSort(song.GetArtistSort());
   SetAlbum(song.strAlbum);
+  SetAlbumSort(song.strAlbumSort);
   SetAlbumArtist(song.GetAlbumArtist()); //Only have album artist in song as vector, no desc or MBID
   SetAlbumArtistSort(song.GetAlbumArtistSort());
   SetMusicBrainzTrackID(song.strMusicBrainzTrackID);
@@ -906,6 +933,7 @@ void CMusicInfoTag::Serialize(CVariant& value) const
 {
   value["url"] = m_strURL;
   value["title"] = m_strTitle;
+  value["titlesort"] = m_strTitleSort;
   if (m_type.compare(MediaTypeArtist) == 0 && m_artist.size() == 1)
     value["artist"] = m_artist[0];
   else
@@ -924,8 +952,9 @@ void CMusicInfoTag::Serialize(CVariant& value) const
   value["displayalbumartist"] = GetAlbumArtistString();
   value["sortartist"] = GetArtistSort();
   value["album"] = m_strAlbum;
+  value["albumsort"] = m_strAlbumSort;
   value["albumartist"] = m_albumArtist;
-  value["sortalbumartist"] = m_strAlbumArtistSort;
+  value["albumartistsort"] = m_strAlbumArtistSort;
   value["genre"] = m_genre;
   value["duration"] = m_iDuration;
   value["track"] = GetTrackNumber();
@@ -996,10 +1025,15 @@ void CMusicInfoTag::ToSortable(SortItem& sortable, Field field) const
       sortable[FieldTitle] = title;
     break;
   }
+  case FieldSortTitle:   sortable[FieldSortTitle] = m_strTitleSort; break;
   case FieldArtist:      sortable[FieldArtist] = m_strArtistDesc; break;
   case FieldArtistSort:  sortable[FieldArtistSort] = m_strArtistSort; break;
   case FieldAlbum:       sortable[FieldAlbum] = m_strAlbum; break;
+  case FieldAlbumSort:   sortable[FieldAlbumSort] = m_strAlbumSort; break;
   case FieldAlbumArtist: sortable[FieldAlbumArtist] = m_strAlbumArtistDesc; break;
+  case FieldAlbumArtistSort:
+      sortable[FieldAlbumArtistSort] = m_strAlbumArtistSort;
+      break;
   case FieldGenre:       sortable[FieldGenre] = m_genre; break;
   case FieldTime:        sortable[FieldTime] = m_iDuration; break;
   case FieldTrackNumber: sortable[FieldTrackNumber] = m_iTrack; break;
@@ -1031,11 +1065,14 @@ void CMusicInfoTag::Archive(CArchive& ar)
   {
     ar << m_strURL;
     ar << m_strTitle;
+    ar << m_strTitleSort;
     ar << m_artist;
     ar << m_strArtistSort;
     ar << m_strArtistDesc;
     ar << m_strAlbum;
+    ar << m_strAlbumSort;
     ar << m_albumArtist;
+    ar << m_strAlbumArtistSort;
     ar << m_strAlbumArtistDesc;
     ar << m_genre;
     ar << m_iDuration;
@@ -1089,11 +1126,14 @@ void CMusicInfoTag::Archive(CArchive& ar)
   {
     ar >> m_strURL;
     ar >> m_strTitle;
+    ar >> m_strTitleSort;
     ar >> m_artist;
     ar >> m_strArtistSort;
     ar >> m_strArtistDesc;
     ar >> m_strAlbum;
+    ar >> m_strAlbumSort;
     ar >> m_albumArtist;
+    ar >> m_strAlbumArtistSort;
     ar >> m_strAlbumArtistDesc;
     ar >> m_genre;
     ar >> m_iDuration;
@@ -1162,9 +1202,12 @@ void CMusicInfoTag::Clear()
   m_strArtistSort.clear();
   m_strComposerSort.clear();
   m_strAlbum.clear();
+  m_strAlbumSort.clear();
   m_albumArtist.clear();
+  m_strAlbumArtistSort.clear();
   m_genre.clear();
   m_strTitle.clear();
+  m_strTitleSort.clear();
   m_strMusicBrainzTrackID.clear();
   m_musicBrainzArtistID.clear();
   m_strMusicBrainzAlbumID.clear();
