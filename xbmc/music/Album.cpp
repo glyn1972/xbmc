@@ -37,6 +37,7 @@ CAlbum::CAlbum(const CFileItem& item)
   Reset();
   const CMusicInfoTag& tag = *item.GetMusicInfoTag();
   strAlbum = tag.GetAlbum();
+  strAlbumSort = tag.GetAlbumSort();
   strMusicBrainzAlbumID = tag.GetMusicBrainzAlbumID();
   strReleaseGroupMBID = tag.GetMusicBrainzReleaseGroupID();
   genre = tag.GetGenre();
@@ -289,6 +290,8 @@ void CAlbum::MergeScrapedAlbum(const CAlbum& source, bool override /* = true */)
     genre = source.genre;
   if ((override && !source.strAlbum.empty()) || strAlbum.empty())
     strAlbum = source.strAlbum;
+  if ((override && !source.strAlbumSort.empty()) || strAlbumSort.empty())
+    strAlbumSort = source.strAlbumSort;
   //@todo: validate ISO8601 format YYYY, YYYY-MM, or YYYY-MM-DD
   if ((override && !source.strReleaseDate.empty()) || strReleaseDate.empty())
     strReleaseDate = source.strReleaseDate;
@@ -486,12 +489,14 @@ bool CAlbum::Load(const TiXmlElement *album, bool append, bool prioritise)
   const std::string itemSeparator = CServiceBroker::GetSettingsComponent()->GetAdvancedSettings()->m_musicItemSeparator;
 
   XMLUtils::GetString(album,              "title", strAlbum);
+  XMLUtils::GetString(album,          "titlessort", strAlbumSort);
   XMLUtils::GetString(album, "musicbrainzalbumid", strMusicBrainzAlbumID);
   XMLUtils::GetString(album, "musicbrainzreleasegroupid", strReleaseGroupMBID);
   XMLUtils::GetBoolean(album, "scrapedmbid", bScrapedMBID);
   XMLUtils::GetString(album, "artistdesc", strArtistDesc);
   std::vector<std::string> artist; // Support old style <artist></artist> for backwards compatibility
   XMLUtils::GetStringArray(album, "artist", artist, prioritise, itemSeparator);
+  XMLUtils::GetString(album, "artistsort", strArtistSort);
   XMLUtils::GetStringArray(album, "genre", genre, prioritise, itemSeparator);
   XMLUtils::GetStringArray(album, "style", styles, prioritise, itemSeparator);
   XMLUtils::GetStringArray(album, "mood", moods, prioritise, itemSeparator);
@@ -516,7 +521,7 @@ bool CAlbum::Load(const TiXmlElement *album, bool append, bool prioritise)
       strReleaseDate = StringUtils::Format("%04i", year);
   }
   XMLUtils::GetString(album, "originalreleasedate", strOrigReleaseDate);
-  
+
   const TiXmlElement* rElement = album->FirstChildElement("rating");
   if (rElement)
   {
@@ -615,10 +620,12 @@ bool CAlbum::Save(TiXmlNode *node, const std::string &tag, const std::string& st
   if (!album) return false;
 
   XMLUtils::SetString(album,                    "title", strAlbum);
+  XMLUtils::SetString(album,                "titlesort", strAlbumSort);
   XMLUtils::SetString(album,       "musicbrainzalbumid", strMusicBrainzAlbumID);
   XMLUtils::SetString(album, "musicbrainzreleasegroupid", strReleaseGroupMBID);
   XMLUtils::SetBoolean(album, "scrapedmbid", bScrapedMBID);
   XMLUtils::SetString(album,              "artistdesc", strArtistDesc); //Can be different from artist credits
+  XMLUtils::SetString(album,              "artistsort", strArtistSort);
   XMLUtils::SetStringArray(album,               "genre", genre);
   XMLUtils::SetStringArray(album,               "style", styles);
   XMLUtils::SetStringArray(album,                "mood", moods);
@@ -655,7 +662,7 @@ bool CAlbum::Save(TiXmlNode *node, const std::string &tag, const std::string& st
     userrating->ToElement()->SetAttribute("max", 10);
 
   XMLUtils::SetInt(album,           "votes", iVotes);
-  
+
   for (const auto& artistCredit : artistCredits)
   {
     // add an <albumArtistCredits> tag
