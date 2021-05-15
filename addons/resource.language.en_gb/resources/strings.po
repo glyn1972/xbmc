@@ -3275,7 +3275,19 @@ msgctxt "#693"
 msgid "Set the shadow size."
 msgstr ""
 
-#empty strings from id 694 to 699
+msgctxt "#694"
+msgid "Sort album"
+msgstr ""
+
+msgctxt "#695"
+msgid "Sort artist"
+msgstr ""
+
+msgctxt "#696"
+msgid "Sort album artist"
+msgstr ""
+
+#empty strings from id 697 to 699
 
 #: xbmc/interfaces/builtins/LibraryBuiltins.cpp
 #: xbmc/music/MusicLibraryQueue.cpp
