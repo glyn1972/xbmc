@@ -870,10 +870,15 @@ void CMusicInfoScanner::FileItemsToAlbums(CFileItemList& items, VECALBUMS& album
         //! @todo in future we may wish to union up the genres, for now we assume they're the same
         album.genre = k->genre;
         album.strArtistSort = k->GetAlbumArtistSort();
+        if(album.strArtistSort.empty())
+        {
+            album.strArtistSort = k->GetArtistSort();
+        }
         // in addition, we may want to use release date as discriminating between albums
         album.strReleaseDate = k->strReleaseDate,
         album.strLabel = k->strRecordLabel;
         album.strType = k->strAlbumType;
+        album.strAlbumSort = k->strAlbumSort;
         album.songs.push_back(*k);
       }
       albums.push_back(album);
