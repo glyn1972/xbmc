@@ -3187,7 +3187,19 @@ msgctxt "#687"
 msgid "From metadata"
 msgstr ""
 
-#empty strings from id 688 to 699
+msgctxt "#688"
+msgid "Sort album"
+msgstr ""
+
+msgctxt "#689"
+msgid "Sort artist"
+msgstr ""
+
+msgctxt "#690"
+msgid "Sort album artist"
+msgstr ""
+
+#empty strings from id 691 to 699
 
 #: xbmc/music/infoscanner/MusicInfoScanner.cpp
 #: xbmc/music/MusicDatabase.cpp
