@@ -185,7 +185,7 @@ static const AVCodec* FindDecoder(CDVDStreamInfo& hints)
   const AVCodec* codec = nullptr;
   void* i = 0;
 
-  if (!(hints.codecOptions & CODEC_FORCE_SOFTWARE))
+  //if (!(hints.codecOptions & CODEC_FORCE_SOFTWARE))
     while ((codec = av_codec_iterate(&i)))
     {
       if (!av_codec_is_decoder(codec))
