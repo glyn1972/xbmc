@@ -59,6 +59,10 @@
 /// glEnableVertexAttribArray(m_aColor);
 /// ~~~~~~~~~~~~~~~~~
 
+// Added for addons to build correctly on RPi
+#undef HAS_GL
+#define HAS_GLES 3
+//
 #if HAS_GL
 #define GL_TYPE_STRING "GL"
 // always define GL_GLEXT_PROTOTYPES before include gl headers
