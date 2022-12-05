@@ -205,8 +205,22 @@ CDemuxTimeline* CDemuxTimeline::CreateTimeline(CDVDDemux *primaryDemuxer)
   // at least one edition is need
   if (mkv.segment.chapters.editions.size() == 0)
     return nullptr;
-  // multiple editions unsupported (for now), just select the first
+  // multiple editions unsupported (for now), select default edition or first non-hidden
+  // always fall back to first edition if none of the above is found
   auto &edition = mkv.segment.chapters.editions.front();
+  for (auto &e : mkv.segment.chapters.editions)
+    if (!e.flagHidden && e.flagOrdered)
+    {
+      edition = e;
+      break;
+    }
+  for (auto &e : mkv.segment.chapters.editions)
+    if (e.flagDefault && e.flagOrdered)
+    {
+      edition = e;
+      CLog::Log(LOGNOTICE, "TimelineDemuxer: Found default edition");
+      break;
+    }
   // only handle ordered editions
   if (!edition.flagOrdered)
     return nullptr;
