@@ -15,6 +15,11 @@
 #include "utils/log.h"
 #include "utils/StringUtils.h"
 
+// quick&dirty hack: use global variables for MKV edition switching
+int g_currentEdition = 0;
+int g_requestedEdition = 0;
+bool g_multiEdition = false;
+
 CDemuxTimeline::CDemuxTimeline() {}
 
 CDemuxTimeline::~CDemuxTimeline() {}
@@ -192,6 +197,12 @@ std::string segUidToHex(std::string uid)
 
 CDemuxTimeline* CDemuxTimeline::CreateTimeline(CDVDDemux *primaryDemuxer)
 {
+  int requestedEdition = g_requestedEdition;
+  // reset global variables to initialized state
+  g_requestedEdition = 0;
+  g_currentEdition = 1;
+  g_multiEdition = false;
+
   std::unique_ptr<CDVDInputStreamFile> inStream(new CDVDInputStreamFile(CFileItem(primaryDemuxer->GetFileName(), false)));
   if (!inStream->Open())
     return nullptr;
@@ -205,22 +216,64 @@ CDemuxTimeline* CDemuxTimeline::CreateTimeline(CDVDDemux *primaryDemuxer)
   // at least one edition is need
   if (mkv.segment.chapters.editions.size() == 0)
     return nullptr;
-  // multiple editions unsupported (for now), select default edition or first non-hidden
-  // always fall back to first edition if none of the above is found
+  if (mkv.segment.chapters.editions.size() > 1) { g_multiEdition = true; }
+
+  // pre-set edition to fall-back mode: first non-hidden ordered or first available
+  int i = 1;
   auto &edition = mkv.segment.chapters.editions.front();
+  for (auto &e : mkv.segment.chapters.editions)
+    if (e.flagOrdered)
+    {
+      edition = e;
+      break;
+    }
   for (auto &e : mkv.segment.chapters.editions)
     if (!e.flagHidden && e.flagOrdered)
     {
       edition = e;
       break;
     }
-  for (auto &e : mkv.segment.chapters.editions)
-    if (e.flagDefault && e.flagOrdered)
+  // try to set default edition if no specific edition is requested
+  if (!requestedEdition)
+  {
+    for (auto &e : mkv.segment.chapters.editions)
     {
-      edition = e;
-      CLog::Log(LOGNOTICE, "TimelineDemuxer: Found default edition");
-      break;
+      if (e.flagDefault && e.flagOrdered)
+      {
+        edition = e;
+        CLog::Log(LOGNOTICE, "TimelineDemuxer: Found default edition %d", i);
+        g_currentEdition = i;
+        if(!e.flagHidden) break;
+      }
+      i++;
     }
+  }
+  // otherwise try to set edition as requested
+  else
+  {
+    if (requestedEdition < 0) // last edition
+    {
+      for (auto &e : mkv.segment.chapters.editions)
+        if (!e.flagHidden && e.flagOrdered) { edition = e; i++; }
+      g_currentEdition = --i;
+      CLog::Log(LOGNOTICE, "TimelineDemuxer: Found last edition %d", i);
+    }
+    else
+    {
+      for (auto &e : mkv.segment.chapters.editions)
+        if (!e.flagHidden && e.flagOrdered)
+        {
+          if (i == requestedEdition)
+          {
+            edition = e;
+            g_currentEdition = i;
+            CLog::Log(LOGNOTICE, "TimelineDemuxer: Found requested edition %d", i);
+            break;
+          }
+          i++;
+        }
+    }
+  }
   // only handle ordered editions
   if (!edition.flagOrdered)
     return nullptr;

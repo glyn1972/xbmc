@@ -390,6 +390,8 @@
       <down mod="ctrl">SubtitleShiftDown</down>
       <pageup>SkipNext</pageup>
       <pagedown>SkipPrevious</pagedown>
+      <pageup mod="alt">ChannelUp</pageup>
+      <pagedown mod="alt">ChannelDown</pagedown>
       <plus mod="ctrl">VolAmpUp</plus>
       <equals mod="ctrl">VolAmpUp</equals>
       <minus mod="ctrl">VolAmpDown</minus>
