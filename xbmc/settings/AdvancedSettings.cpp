@@ -156,6 +156,8 @@ void CAdvancedSettings::Initialize()
   m_maxTempo = 1.55f;
   m_videoPreferStereoStream = false;
 
+  m_videoMkvSegmentsSearchDirs = std::vector<std::string>{""};
+
   m_videoDefaultLatency = 0.0;
 
   m_musicUseTimeSeeking = true;
@@ -624,6 +626,13 @@ void CAdvancedSettings::ParseSettingsFile(const std::string &file)
     XMLUtils::GetInt(pElement, "useocclusionquery", m_videoCaptureUseOcclusionQuery, -1, 1);
     XMLUtils::GetBoolean(pElement,"vdpauInvTelecine",m_videoVDPAUtelecine);
     XMLUtils::GetBoolean(pElement,"vdpauHDdeintSkipChroma",m_videoVDPAUdeintSkipChromaHD);
+
+    auto pMkvSegmentsSearchDirs = pElement->FirstChildElement("mkvsegmentssearchdirs");
+    if (pMkvSegmentsSearchDirs)
+    {
+      XMLUtils::GetStringArray(pMkvSegmentsSearchDirs, "subdir", m_videoMkvSegmentsSearchDirs, true, "");
+      m_videoMkvSegmentsSearchDirs.push_back("");
+    }
 
     TiXmlElement* pAdjustRefreshrate = pElement->FirstChildElement("adjustrefreshrate");
     if (pAdjustRefreshrate)
