@@ -218,7 +218,7 @@ CDemuxTimeline* CDemuxTimeline::CreateTimeline(CDVDDemux *primaryDemuxer)
   // collect needed segment uids
   std::set<MatroskaSegmentUID> neededSegmentUIDs;
   for (auto &chapter : edition.chapterAtoms)
-    if (chapter.segUid.size() != 0 && chapter.segUid != mkv.segment.infos.uid)
+    if (chapter.segUid.size() != 0 && chapter.segUid != mkv.segment.infos.uid && !chapter.flagHidden)
       neededSegmentUIDs.insert(chapter.segUid);
 
   // find linked segments
