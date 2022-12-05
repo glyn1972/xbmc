@@ -24,7 +24,7 @@ public:
 
   DemuxPacket* Read() override;
 
-  bool SeekTime(int time, bool backwords = false, double* startpts = NULL) override;
+  bool SeekTime(double time, bool backwords = false, double* startpts = NULL) override;
   bool SeekChapter(int chapter, double* startpts = NULL) override;
 
   int GetChapterCount() override;

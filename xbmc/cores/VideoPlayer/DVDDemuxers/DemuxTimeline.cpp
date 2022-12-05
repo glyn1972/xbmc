@@ -81,7 +81,7 @@ DemuxPacket* CDemuxTimeline::Read()
   return packet;
 }
 
-bool CDemuxTimeline::SeekTime(int time, bool backwords, double* startpts)
+bool CDemuxTimeline::SeekTime(double time, bool backwords, double* startpts)
 {
   auto it = m_chapterMap.lower_bound(time);
   if (it == m_chapterMap.end())
