@@ -1617,12 +1617,12 @@ bool CApplication::OnAction(const CAction &action)
     switch (action.GetID())
     {
     case ACTION_CHANNEL_UP:
-      CLog::Log(LOGNOTICE, "%s: MKV edition switch requested: currently playing edition %d, switching to next edition)", __FUNCTION__, g_currentEdition);
+      CLog::Log(LOGINFO, "%s: MKV edition switch requested: currently playing edition %d, switching to next edition)", __FUNCTION__, g_currentEdition);
       g_requestedEdition = g_currentEdition + 1;
       Restart(true);
       break;
     case ACTION_CHANNEL_DOWN:
-      CLog::Log(LOGNOTICE, "%s: MKV edition switch requested: currently playing edition %d, switching to previous edition)", __FUNCTION__, g_currentEdition);
+      CLog::Log(LOGINFO, "%s: MKV edition switch requested: currently playing edition %d, switching to previous edition)", __FUNCTION__, g_currentEdition);
       g_requestedEdition = g_currentEdition - 1;
       if (!g_requestedEdition) g_requestedEdition--; // 0 means "default edition", -1 means "last edition"
       Restart(true);
