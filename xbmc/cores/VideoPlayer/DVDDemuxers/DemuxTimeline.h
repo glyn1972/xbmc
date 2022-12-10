@@ -18,7 +18,7 @@ public:
   static CDemuxTimeline* CreateTimelineFromEbml(CDVDDemux *primaryDemuxer);
   static CDemuxTimeline* CreateTimelineFromMatroskaParser(CDVDDemux *primaryDemuxer);
 
-  void Reset() override;
+  bool Reset() override;
   void Abort() override;
   void Flush() override;
 
