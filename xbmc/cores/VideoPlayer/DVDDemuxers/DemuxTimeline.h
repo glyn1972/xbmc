@@ -77,6 +77,7 @@ private:
   std::list<std::shared_ptr<CDVDInputStream>> m_inputStreams;
 
   std::vector<ChapterInfo> m_chapters;
+  std::vector<ChapterInfo> m_visibleChapters;
   std::map<int,ChapterInfo*> m_chapterMap;  // maps chapter end display time in msec to chapter info
 
   ChapterInfo *m_curChapter;
