@@ -31,8 +31,20 @@ bool CDemuxTimeline::SwitchToNextDemuxer()
   if (m_curChapter->index + 1 == m_chapters.size())
     return false;
   CLog::Log(LOGDEBUG, "TimelineDemuxer: Switch Demuxer");
+  
+  ChapterInfo *prevChapter = m_curChapter;
   m_curChapter = &m_chapters[m_curChapter->index + 1];
-  m_curChapter->demuxer->SeekTime(m_curChapter->startSrcTime, true);
+
+  if(prevChapter->demuxer->GetDemuxerId() == m_curChapter->demuxer->GetDemuxerId() && prevChapter->stopSrcTime() == m_curChapter->startSrcTime)
+  {
+    CLog::Log(LOGDEBUG, "TimelineDemuxer: No seek performed - demuxer is the same, and chapters run into each other.");
+  }
+  else
+  {
+    CLog::Log(LOGDEBUG, "TimelineDemuxer: Performing seek after demuxer switch");
+    m_curChapter->demuxer->SeekTime(m_curChapter->startSrcTime, true);
+  }
+  
   return true;
 }
 
@@ -106,10 +118,10 @@ bool CDemuxTimeline::SeekTime(double time, bool backwords, double* startpts)
 bool CDemuxTimeline::SeekChapter(int chapter, double* startpts)
 {
   --chapter;
-  if (chapter < 0 || unsigned(chapter) >= m_chapters.size())
+  if (chapter < 0 || unsigned(chapter) >= m_visibleChapters.size())
     return false;
   CLog::Log(LOGDEBUG, "TimelineDemuxer: Switch Demuxer");
-  m_curChapter = &m_chapters[chapter];
+  m_curChapter = &m_visibleChapters[chapter];
   bool result = m_curChapter->demuxer->SeekTime(m_curChapter->startSrcTime, true, startpts);
   if (result && startpts)
     (*startpts) += m_curChapter->shiftTime();
@@ -118,28 +130,28 @@ bool CDemuxTimeline::SeekChapter(int chapter, double* startpts)
 
 int CDemuxTimeline::GetChapterCount()
 {
-  return m_chapters.size();
+  return m_visibleChapters.size();
 }
 
 int CDemuxTimeline::GetChapter()
 {
-  return m_curChapter->index + 1;
+  return m_visibleChapters->index + 1;
 }
 
 void CDemuxTimeline::GetChapterName(std::string& strChapterName, int chapterIdx)
 {
   --chapterIdx;
-  if (chapterIdx < 0 || unsigned(chapterIdx) >= m_chapters.size())
+  if (chapterIdx < 0 || unsigned(chapterIdx) >= m_visibleChapters.size())
     return;
-  strChapterName = m_chapters[chapterIdx].title;
+  strChapterName = m_visibleChapters[chapterIdx].title;
 }
 
 int64_t CDemuxTimeline::GetChapterPos(int chapterIdx)
 {
   --chapterIdx;
-  if (chapterIdx < 0 || unsigned(chapterIdx) >= m_chapters.size())
+  if (chapterIdx < 0 || unsigned(chapterIdx) >= m_visibleChapters.size())
     return 0;
-  return (m_chapters[chapterIdx].startDispTime + 999) / 1000;
+  return (m_visibleChapters[chapterIdx].startDispTime + 999) / 1000;
 }
 
 void CDemuxTimeline::SetSpeed(int iSpeed)
@@ -288,7 +300,7 @@ CDemuxTimeline* CDemuxTimeline::CreateTimeline(CDVDDemux *primaryDemuxer)
   // collect needed segment uids
   std::set<MatroskaSegmentUID> neededSegmentUIDs;
   for (auto &chapter : edition.chapterAtoms)
-    if (chapter.segUid.size() != 0 && chapter.segUid != mkv.segment.infos.uid && !chapter.flagHidden)
+    if (chapter.segUid.size() != 0 && chapter.segUid != mkv.segment.infos.uid)
       neededSegmentUIDs.insert(chapter.segUid);
 
   // find linked segments
@@ -296,8 +308,14 @@ CDemuxTimeline* CDemuxTimeline::CreateTimeline(CDVDDemux *primaryDemuxer)
   segmentDemuxer[""] = primaryDemuxer;
   segmentDemuxer[mkv.segment.infos.uid] = primaryDemuxer;
   auto &searchDirs = CServiceBroker::GetSettingsComponent()->GetAdvancedSettings()->m_videoMkvSegmentsSearchDirs
+
   std::string filename = primaryDemuxer->GetFileName();
-  std::string dirname = filename.substr(0, filename.rfind('/') + 1);
+  size_t slashPosition = filename.find_last_of("/\\");
+  if (slashPosition == std::string::npos)
+    return nullptr; // no directory
+
+  std::string dirname = filename.substr(0, slashPosition + 1);
+
   for (auto &subDir : searchDirs)
   {
     if (neededSegmentUIDs.size() == 0)
@@ -349,6 +367,8 @@ CDemuxTimeline* CDemuxTimeline::CreateTimeline(CDVDDemux *primaryDemuxer)
         chapter.displays.GetDefault()
       );
       dispTime += timeline->m_chapters.back().duration;
+      if(!chapter.flagHidden)
+        timeline->m_visibleChapters.emplace_back(m_chapters.back());
     }
 
   if (!timeline->m_chapters.size())
