@@ -241,7 +241,7 @@ CDemuxTimeline* CDemuxTimeline::CreateTimeline(CDVDDemux *primaryDemuxer)
       if (e.flagDefault && e.flagOrdered)
       {
         edition = e;
-        CLog::Log(LOGNOTICE, "TimelineDemuxer: Found default edition %d", i);
+        CLog::Log(LOGINFO, "TimelineDemuxer: Found default edition %d", i);
         g_currentEdition = i;
         if(!e.flagHidden) break;
       }
@@ -256,7 +256,7 @@ CDemuxTimeline* CDemuxTimeline::CreateTimeline(CDVDDemux *primaryDemuxer)
       for (auto &e : mkv.segment.chapters.editions)
         if (!e.flagHidden && e.flagOrdered) { edition = e; i++; }
       g_currentEdition = --i;
-      CLog::Log(LOGNOTICE, "TimelineDemuxer: Found last edition %d", i);
+      CLog::Log(LOGINFO, "TimelineDemuxer: Found last edition %d", i);
     }
     else
     {
@@ -267,7 +267,7 @@ CDemuxTimeline* CDemuxTimeline::CreateTimeline(CDVDDemux *primaryDemuxer)
           {
             edition = e;
             g_currentEdition = i;
-            CLog::Log(LOGNOTICE, "TimelineDemuxer: Found requested edition %d", i);
+            CLog::Log(LOGINFO, "TimelineDemuxer: Found requested edition %d", i);
             break;
           }
           i++;
