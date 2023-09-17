@@ -293,9 +293,13 @@ CDemuxTimeline* CDemuxTimeline::CreateTimeline(CDVDDemux *primaryDemuxer)
   std::map<MatroskaSegmentUID,CDVDDemux*> segmentDemuxer;
   segmentDemuxer[""] = primaryDemuxer;
   segmentDemuxer[mkv.segment.infos.uid] = primaryDemuxer;
-  auto &searchDirs = g_advancedSettings.m_videoMkvSegmentsSearchDirs;
+  auto &searchDirs = CServiceBroker::GetSettingsComponent()->GetAdvancedSettings()->m_videoMkvSegmentsSearchDirs;
   std::string filename = primaryDemuxer->GetFileName();
-  std::string dirname = filename.substr(0, filename.rfind('/') + 1);
+  size_t slashPosition = filename.find_last_of("/\\");
+  if (slashPosition == std::string::npos)
+    return nullptr; // no directory
+
+  std::string dirname = filename.substr(0, slashPosition + 1);
   for (auto &subDir : searchDirs)
   {
     if (neededSegmentUIDs.size() == 0)
@@ -304,7 +308,7 @@ CDemuxTimeline* CDemuxTimeline::CreateTimeline(CDVDDemux *primaryDemuxer)
     XFILE::CDirectory::GetDirectory(dirname + subDir, files, ".mkv");
     for (auto &file : files.GetList())
     {
-      std::unique_ptr<CDVDInputStreamFile> uInput2(new CDVDInputStreamFile(*file));
+      std::unique_ptr<CDVDInputStreamFile> uInput2(new CDVDInputStreamFile(*file, READ_TRUNCATED | READ_BITRATE | READ_CHUNKED));
       CDVDInputStream *input2 = uInput2.get();
       if (!input2->Open())
         continue;
@@ -315,7 +319,7 @@ CDemuxTimeline* CDemuxTimeline::CreateTimeline(CDVDDemux *primaryDemuxer)
         continue;
       input2->Seek(mkv2.offsetBegin, SEEK_SET);
       std::unique_ptr<CDVDDemuxFFmpeg> demuxer(new CDVDDemuxFFmpeg());
-      if(demuxer->Open(input2))
+      if(demuxer->Open(input2, false))
       {
         segmentDemuxer[mkv2.segment.infos.uid] = demuxer.get();
         timeline->m_demuxers.emplace_back(std::move(demuxer));
