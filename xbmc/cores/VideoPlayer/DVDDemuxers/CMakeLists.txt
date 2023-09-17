@@ -1,4 +1,7 @@
 set(SOURCES DemuxMultiSource.cpp
+            DemuxTimeline.cpp
+            EbmlParser.cpp
+            MatroskaParser.cpp
             DVDDemux.cpp
             DVDDemuxBXA.cpp
             DVDDemuxCC.cpp
@@ -10,6 +13,9 @@ set(SOURCES DemuxMultiSource.cpp
             DVDFactoryDemuxer.cpp)
 
 set(HEADERS DemuxMultiSource.h
+            DemuxTimeline.h
+            EbmlParser.h
+            MatroskaParser.h
             DVDDemux.h
             DVDDemuxBXA.h
             DVDDemuxCC.h

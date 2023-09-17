@@ -14,6 +14,7 @@
 #include "DVDDemuxFFmpeg.h"
 #include "DVDInputStreams/DVDInputStream.h"
 #include "DemuxMultiSource.h"
+#include "DemuxTimeline.h"
 #include "utils/URIUtils.h"
 #include "utils/log.h"
 
@@ -73,7 +74,13 @@ CDVDDemux* CDVDFactoryDemuxer::CreateDemuxer(const std::shared_ptr<CDVDInputStre
 
   std::unique_ptr<CDVDDemuxFFmpeg> demuxer(new CDVDDemuxFFmpeg());
   if (demuxer->Open(pInputStream, fileinfo))
-    return demuxer.release();
+  {
+    CDVDDemux *pDemuxer = demuxer.release();
+    if (CDemuxTimeLine *timeline = CDemuxTimeLine::CreateTimeline(pDemuxer))
+      return timeline;
+    else
+      return pDemuxer;
+  }
   else
     return NULL;
 }

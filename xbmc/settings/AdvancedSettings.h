@@ -177,6 +177,8 @@ class CAdvancedSettings : public ISettingCallback, public ISettingsHandler
     std::string m_videoDefaultPlayer;
     float m_videoPlayCountMinimumPercent;
 
+    std::vector<std::string> m_videoMkvSegmentsSearchDirs;
+
     float m_slideshowBlackBarCompensation;
     float m_slideshowZoomAmount;
     float m_slideshowPanAmount;
