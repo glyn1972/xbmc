@@ -76,7 +76,7 @@ CDVDDemux* CDVDFactoryDemuxer::CreateDemuxer(const std::shared_ptr<CDVDInputStre
   if (demuxer->Open(pInputStream, fileinfo))
   {
     CDVDDemux *pDemuxer = demuxer.release();
-    if (CDemuxTimeLine *timeline = CDemuxTimeLine::CreateTimeline(pDemuxer))
+    if (CDemuxTimeline *timeline = CDemuxTimeline::CreateTimeline(pDemuxer))
       return timeline;
     else
       return pDemuxer;
