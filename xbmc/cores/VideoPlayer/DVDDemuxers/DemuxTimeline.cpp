@@ -3,7 +3,7 @@
 #include <algorithm>
 
 #include "DVDClock.h"
-#include "DVDDemuxPacket.h"
+#include "DVDDemuxers/DVDDemuxUtils.h"
 #include "DVDFactoryDemuxer.h"
 #include "DVDDemuxFFmpeg.h"
 #include "DVDInputStreams/DVDInputStreamFile.h"
@@ -14,6 +14,8 @@
 #include "settings/AdvancedSettings.h"
 #include "utils/log.h"
 #include "utils/StringUtils.h"
+#include "ServiceBroker.h"
+#include "settings/SettingsComponent.h"
 
 // quick&dirty hack: use global variables for MKV edition switching
 int g_currentEdition = 0;
@@ -204,7 +206,7 @@ CDemuxTimeline* CDemuxTimeline::CreateTimeline(CDVDDemux *primaryDemuxer)
   g_currentEdition = 1;
   g_multiEdition = false;
 
-  std::unique_ptr<CDVDInputStreamFile> inStream(new CDVDInputStreamFile(CFileItem(primaryDemuxer->GetFileName(), false)));
+  std::unique_ptr<CDVDInputStreamFile> inStream(new CDVDInputStreamFile(CFileItem(primaryDemuxer->GetFileName()), XFILE::READ_TRUNCATED | XFILE::READ_BITRATE | XFILE::READ_CHUNKED)));
   if (!inStream->Open())
     return nullptr;
   CDVDInputStream *input = inStream.get();
@@ -305,10 +307,10 @@ CDemuxTimeline* CDemuxTimeline::CreateTimeline(CDVDDemux *primaryDemuxer)
     if (neededSegmentUIDs.size() == 0)
       break;
     CFileItemList files;
-    XFILE::CDirectory::GetDirectory(dirname + subDir, files, ".mkv");
+    XFILE::CDirectory::GetDirectory(dirname + subDir, files, ".mkv", XFILE::DIR_FLAG_DEFAULTS);
     for (auto &file : files.GetList())
     {
-      std::unique_ptr<CDVDInputStreamFile> uInput2(new CDVDInputStreamFile(*file, READ_TRUNCATED | READ_BITRATE | READ_CHUNKED));
+      std::shared_ptr<CDVDInputStreamFile> uInput2(new CDVDInputStreamFile(*file, XFILE::READ_TRUNCATED | XFILE::READ_BITRATE | XFILE::READ_CHUNKED));
       CDVDInputStream *input2 = uInput2.get();
       if (!input2->Open())
         continue;
@@ -319,7 +321,7 @@ CDemuxTimeline* CDemuxTimeline::CreateTimeline(CDVDDemux *primaryDemuxer)
         continue;
       input2->Seek(mkv2.offsetBegin, SEEK_SET);
       std::unique_ptr<CDVDDemuxFFmpeg> demuxer(new CDVDDemuxFFmpeg());
-      if(demuxer->Open(input2, false))
+      if(demuxer->Open(uInput2, false))
       {
         segmentDemuxer[mkv2.segment.infos.uid] = demuxer.get();
         timeline->m_demuxers.emplace_back(std::move(demuxer));
