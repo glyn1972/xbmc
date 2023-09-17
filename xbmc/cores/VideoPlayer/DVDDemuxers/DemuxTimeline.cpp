@@ -34,13 +34,14 @@ bool CDemuxTimeline::SwitchToNextDemuxer()
   return true;
 }
 
-void CDemuxTimeline::Reset()
+bool CDemuxTimeline::Reset()
 {
   for (auto &demuxer : m_demuxers)
     demuxer->Reset();
   m_curChapter = m_chapterMap.begin()->second;
   if (m_curChapter->startSrcTime != 0)
     m_curChapter->demuxer->SeekTime(m_curChapter->startSrcTime);
+  return true;
 }
 
 void CDemuxTimeline::Abort()
