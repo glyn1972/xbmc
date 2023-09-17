@@ -6,6 +6,10 @@
  *  See LICENSES/README.md for more information.
  */
 
+extern bool g_multiEdition;
+extern int g_currentEdition;
+extern int g_requestedEdition;
+
 #include "Application.h"
 
 #include "AppInboundProtocol.h"
@@ -1607,6 +1611,24 @@ void CApplication::Render()
 
 bool CApplication::OnAction(const CAction &action)
 {
+  // dirty hack for multi-edition MKVs
+  if (g_multiEdition)
+  {
+    switch (action.GetID())
+    {
+    case ACTION_CHANNEL_UP:
+      CLog::Log(LOGNOTICE, "%s: MKV edition switch requested: currently playing edition %d, switching to next edition)", __FUNCTION__, g_currentEdition);
+      g_requestedEdition = g_currentEdition + 1;
+      Restart(true);
+      break;
+    case ACTION_CHANNEL_DOWN:
+      CLog::Log(LOGNOTICE, "%s: MKV edition switch requested: currently playing edition %d, switching to previous edition)", __FUNCTION__, g_currentEdition);
+      g_requestedEdition = g_currentEdition - 1;
+      if (!g_requestedEdition) g_requestedEdition--; // 0 means "default edition", -1 means "last edition"
+      Restart(true);
+      break;
+    }
+  }
   // special case for switching between GUI & fullscreen mode.
   if (action.GetID() == ACTION_SHOW_GUI)
   { // Switch to fullscreen mode if we can

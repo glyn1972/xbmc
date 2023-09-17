@@ -6,6 +6,9 @@
  *  See LICENSES/README.md for more information.
  */
 
+extern bool g_multiEdition;
+extern int g_currentEdition;
+
 #include "VideoPlayer.h"
 #include "VideoPlayerRadioRDS.h"
 #include "system.h"
@@ -731,6 +734,8 @@ bool CVideoPlayer::CloseFile(bool reopen)
   m_HasAudio = false;
 
   CLog::Log(LOGINFO, "VideoPlayer: finished waiting");
+  g_multiEdition = false;
+  g_currentEdition = 0;
   return true;
 }
 

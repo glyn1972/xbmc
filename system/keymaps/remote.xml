@@ -203,8 +203,8 @@
       <language>AudioNextLanguage</language>
       <playlist>Playlist</playlist>
       <hash>AudioNextLanguage</hash>
-      <pageplus>SkipNext</pageplus>
-      <pageminus>SkipPrevious</pageminus>
+      <pageplus>ChannelUp</pageplus>
+      <pageminus>ChannelDown</pageminus>
     </remote>
   </FullscreenVideo>
   <FullscreenGame>
