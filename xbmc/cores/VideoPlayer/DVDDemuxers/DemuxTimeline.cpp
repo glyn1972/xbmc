@@ -206,7 +206,7 @@ CDemuxTimeline* CDemuxTimeline::CreateTimeline(CDVDDemux *primaryDemuxer)
   g_currentEdition = 1;
   g_multiEdition = false;
 
-  std::unique_ptr<CDVDInputStreamFile> inStream(new CDVDInputStreamFile(CFileItem(primaryDemuxer->GetFileName()), XFILE::READ_TRUNCATED | XFILE::READ_BITRATE | XFILE::READ_CHUNKED)));
+  std::unique_ptr<CDVDInputStreamFile> inStream(new CDVDInputStreamFile(CFileItem(primaryDemuxer->GetFileName(), false), XFILE::READ_TRUNCATED | XFILE::READ_BITRATE | XFILE::READ_CHUNKED));
   if (!inStream->Open())
     return nullptr;
   CDVDInputStream *input = inStream.get();
