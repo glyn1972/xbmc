@@ -51,8 +51,11 @@ static const translateField fields[] = {
   { "filename",          FieldFilename,                CDatabaseQueryRule::TEXT_FIELD,     NULL,                                 false, 561 },
   { "path",              FieldPath,                    CDatabaseQueryRule::TEXT_FIELD,     NULL,                                 true,  573 },
   { "album",             FieldAlbum,                   CDatabaseQueryRule::TEXT_FIELD,     NULL,                                 true,  558 },
+  { "albumsort",         FieldAlbumSort,               CDatabaseQueryRule::TEXT_FIELD,     NULL,                                 false, 694 },
   { "albumartist",       FieldAlbumArtist,             CDatabaseQueryRule::TEXT_FIELD,     NULL,                                 true,  566 },
+  { "albumartistsort",   FieldAlbumArtistSort,         CDatabaseQueryRule::TEXT_FIELD,     NULL,                                 false, 696 },
   { "artist",            FieldArtist,                  CDatabaseQueryRule::TEXT_FIELD,     NULL,                                 true,  557 },
+  { "artistsort",        FieldArtistSort,              CDatabaseQueryRule::TEXT_FIELD,     NULL,                                 false, 695 },
   { "tracknumber",       FieldTrackNumber,             CDatabaseQueryRule::NUMERIC_FIELD,  StringValidation::IsPositiveInteger,  false, 554 },
   { "role",              FieldRole,                    CDatabaseQueryRule::TEXT_FIELD,     NULL,                                 true, 38033 },
   { "comment",           FieldComment,                 CDatabaseQueryRule::TEXT_FIELD,     NULL,                                 false, 569 },
@@ -312,10 +315,14 @@ std::vector<Field> CSmartPlaylistRule::GetFields(const std::string &type)
     fields.push_back(FieldGenre);
     fields.push_back(FieldSource);
     fields.push_back(FieldAlbum);
+    fields.push_back(FieldAlbumSort);
     fields.push_back(FieldDiscTitle);
     fields.push_back(FieldArtist);
+    fields.push_back(FieldArtistSort);
     fields.push_back(FieldAlbumArtist);
+    fields.push_back(FieldAlbumArtistSort);
     fields.push_back(FieldTitle);
+    fields.push_back(FieldSortTitle);
     fields.push_back(FieldYear);
     if (!CServiceBroker::GetSettingsComponent()->GetSettings()->GetBool(
       CSettings::SETTING_MUSICLIBRARY_USEORIGINALDATE))
@@ -343,11 +350,14 @@ std::vector<Field> CSmartPlaylistRule::GetFields(const std::string &type)
     fields.push_back(FieldGenre);
     fields.push_back(FieldSource);
     fields.push_back(FieldAlbum);
+    fields.push_back(FieldAlbumSort);
     fields.push_back(FieldDiscTitle);
     fields.push_back(FieldTotalDiscs);
     fields.push_back(FieldIsBoxset);
     fields.push_back(FieldArtist);        // any artist
+    fields.push_back(FieldArtistSort);
     fields.push_back(FieldAlbumArtist);  // album artist
+    fields.push_back(FieldAlbumArtistSort);
     fields.push_back(FieldYear);
     if (!CServiceBroker::GetSettingsComponent()->GetSettings()->GetBool(
         CSettings::SETTING_MUSICLIBRARY_USEORIGINALDATE))
