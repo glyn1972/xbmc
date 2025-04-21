@@ -82,6 +82,7 @@ macro(buildFFMPEG)
                     ${CMAKE_SOURCE_DIR}/tools/depends/target/ffmpeg/CMakeLists.txt
                     <SOURCE_DIR> &&
                     patch -p1 < ${CMAKE_SOURCE_DIR}/tools/depends/target/ffmpeg/0001-rpi-Add-hevc-acceleration.patch &&
+                    patch -p1 < ${CMAKE_SOURCE_DIR}/tools/depends/target/ffmpeg/0002-haali-matroska-demuxer.patch &&
                     echo "########################################## patched ffmpeg ##############################"
                     )
 
